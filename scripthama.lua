@@ -217,7 +217,7 @@ do
   local function ShowNotification(title,text,duration)pcall(function()local sg=game:GetService('StarterGui')if not sg then
     return
   end
-  sg:SetCore('SendNotification',{Title=tostring(title or'JEYHUB'),Text=tostring(text or''),Duration=tonumber(duration)or 2})
+  sg:SetCore('SendNotification',{Title=tostring(title or'HAMA'),Text=tostring(text or''),Duration=tonumber(duration)or 2})
   end
   )
   end
@@ -295,7 +295,7 @@ do
   end
   )
   end
-  _JEYHUB_TRACK_INSTANCES=setmetatable({},{__mode='v'})_JEYHUB_TRACK_ATTRIBUTES=setmetatable({},{__mode='k'})pcall(function()warn(string.format('[JEYHUB] Cleanup: %d hooks, %d instances, %d attrs',_stats.hooks,_stats.instances,_stats.attrs))
+  _JEYHUB_TRACK_INSTANCES=setmetatable({},{__mode='v'})_JEYHUB_TRACK_ATTRIBUTES=setmetatable({},{__mode='k'})pcall(function()warn(string.format('[HAMA] Cleanup: %d hooks, %d instances, %d attrs',_stats.hooks,_stats.instances,_stats.attrs))
   end
   )
   end
@@ -691,10 +691,10 @@ do
     return svc
   end
   if ok and svc~=nil then
-    warn('[JEYHUB] Service',name,
+    warn('[HAMA] Service',name,
     'returned an unexpected type:',typeof(svc))return nil
   end
-  warn('[JEYHUB] Failed to get service:',name,svc)return nil
+  warn('[HAMA] Failed to get service:',name,svc)return nil
   end
   local TweenService=SafeService('TweenService')local UserInputService=SafeService('UserInputService')local Players=SafeService('Players')local VoiceChatService=SafeService('VoiceChatService')local ContentProvider=SafeService('ContentProvider')local RunService=SafeService('RunService')local PhysicsService=SafeService('PhysicsService')local TextChatSvcGlobal=SafeService('TextChatService')local _UG_COLLISION_GROUP='JH_Underground'local _ugCollisionGroupReady=false pcall(function()if PhysicsService then
     local existing={}for _,g in ipairs(PhysicsService:GetRegisteredCollisionGroups())do
@@ -1005,7 +1005,7 @@ do
                 JD_Store[key]=value JD_Written[key]={encoded=joined,parts=count
               }
             else
-              JD_FailedSections[key]=info warn("[JEYHUB] data section '"..tostring(key).."' unreadable ("..tostring(value)..'), left untouched on disk')
+              JD_FailedSections[key]=info warn("[HAMA] data section '"..tostring(key).."' unreadable ("..tostring(value)..'), left untouched on disk')
             end
           end
         end
@@ -1013,12 +1013,12 @@ do
       end
       JD_Store=data JD_Store._meta=JD_Store._meta or{version=1}return
     else
-      warn('[JEYHUB] data.json corrupt, backed up and reset:',data)pcall(function()writefile(JD_PATH..'.corrupt',raw)
+      warn('[HAMA] data.json corrupt, backed up and reset:',data)pcall(function()writefile(JD_PATH..'.corrupt',raw)
       end
       )
     end
   else
-    warn('[JEYHUB] Failed to read data.json:',raw)
+    warn('[HAMA] Failed to read data.json:',raw)
   end
   end
   local migratedAny=false for _,entry in ipairs(JD_LEGACY_FILES)do
@@ -1038,7 +1038,7 @@ do
     end
   end
   if migratedAny then
-    warn('[JEYHUB] Migrated legacy per-feature JSON files into '..JD_PATH)
+    warn('[HAMA] Migrated legacy per-feature JSON files into '..JD_PATH)
   end
   end
   JD_Load()local function JD_WriteAll()
@@ -1071,7 +1071,7 @@ do
         else
           local parts=JD_Split(enc)local allOk=true for i,chunk in ipairs(parts)do
             local okW,errW=pcall(writefile,JD_PartPath(key,i),chunk)if not okW then
-              warn('[JEYHUB] Failed to write part '..i.." of '"..tostring(key).."':",errW)
+              warn('[HAMA] Failed to write part '..i.." of '"..tostring(key).."':",errW)
               allOk=false break
             end
             if i%4==0 then
@@ -1092,7 +1092,7 @@ do
           end
         end
       else
-        JD_Dirty[key]=true warn("[JEYHUB] Failed to encode section '"..tostring(key).."':",enc)if prev then
+        JD_Dirty[key]=true warn("[HAMA] Failed to encode section '"..tostring(key).."':",enc)if prev then
           manifest.sections[key]={parts=prev.parts,bytes=#prev.encoded}
         end
       end
@@ -1118,7 +1118,7 @@ do
       local okW,errW=pcall(writefile,JD_PATH,manifestEnc)if okW then
         JD_LastManifest=manifestEnc
       else
-        warn('[JEYHUB] Failed to write data.json:',errW)
+        warn('[HAMA] Failed to write data.json:',errW)
       end
     end
   end
@@ -1146,7 +1146,7 @@ do
       JD_SavePending=false break
     end
     JD_SavePending=false local okWrite,writeErr=pcall(JD_WriteAll)if not okWrite then
-      warn('[JEYHUB] Failed to write data:',writeErr)
+      warn('[HAMA] Failed to write data:',writeErr)
     end
   until not
   JD_SavePending JD_LastSaveAt=os.clock()JD_Saving=false
@@ -1190,7 +1190,7 @@ do
     if bucket.count>=_SAFECALL_ERR_MAX then
       return
     end
-    bucket.count=bucket.count+1 warn('[JEYHUB] Runtime error caught (safe, UI keeps running):',tostring(err))
+    bucket.count=bucket.count+1 warn('[HAMA] Runtime error caught (safe, UI keeps running):',tostring(err))
   end
   end
   local function SafeConnect(signal,fn)if not signal or type(fn)~='function'then
@@ -1206,7 +1206,7 @@ do
   )if ok and conn then
     return TrackConnection(conn)
   end
-  warn('[JEYHUB] Failed to connect signal:',conn)return nil
+  warn('[HAMA] Failed to connect signal:',conn)return nil
   end
   local function DirectConnect(signal,fn)if not signal or type(fn)~='function'then
     return nil
@@ -1220,7 +1220,7 @@ do
     return TrackConnection(
     conn)
   end
-  warn('[JEYHUB] DirectConnect failed:',conn)return nil
+  warn('[HAMA] DirectConnect failed:',conn)return nil
   end
   local function GetSignal(obj,signalName)if not obj or typeof(obj)~='Instance'then
     return nil
@@ -1344,7 +1344,7 @@ do
   )if ok4 and coreGui then
     return coreGui
   end
-  warn("[JEYHUB] Couldn't find a valid parent GUI on this executor.")return nil
+  warn("[HAMA] Couldn't find a valid parent GUI on this executor.")return nil
   end
   local Palette={Background=Color3.fromRGB(7,7,8),Glass=Color3.fromRGB(13,13,14),GlassLight=Color3.fromRGB(22,22,23),GlassSurface=Color3.fromRGB(17,17,18),Element=Color3.fromRGB(20,20,21),ElementHover=Color3.fromRGB(31,31,33),ElementActive=Color3.fromRGB(40,40,42),Border=Color3.fromRGB(50,50,52),BorderLight=Color3.fromRGB(72,72,75),Stroke=Color3.fromRGB(210,210,210),StrokeSoft=Color3.fromRGB(80,80,80),Outline=Color3.fromRGB(190,190,190),Accent=Color3.fromRGB(240,240,240),AccentDim=Color3.fromRGB(155,155,155),AccentDark=Color3.fromRGB(60,60,60),Text=Color3.fromRGB(255,255,255),SubText=Color3.fromRGB(172,172,172),TextMuted=Color3.fromRGB(121,121,121),Success=Color3.fromRGB(74,222,128),Warning=Color3.fromRGB(250,
   204,21),Danger=Color3.fromRGB(239,68,68)}Palette.Home={Edge=Color3.fromRGB(190,190,190),Tile=Color3.fromRGB(10,10,11),Muted=Color3.fromRGB(121,121,121),EdgeCard=0.8,EdgeRest=0.8,EdgeHover=0.35,EdgeActive=0.2}Palette.Typo={Display=Enum.Font.GothamBlack,Bold=Enum.Font.GothamBold,Medium=Enum.Font.GothamMedium,Body=Enum.Font.Gotham,Micro=8,XS=9,SM=10,MD=11,LG=12,XL=13,Hero=15}Palette.Metric={R_XS=4,R_SM=6,R_MD=8,R_LG=10,R_XL=12,R_WIN=14,R_PILL=100,PAD_X=10,PAD_Y=8,GAP=6,GAP_LG=8,ROW_H=38,PILL_H=26,BTN_H=23,TOPBAR=36,SIDEBAR=50,TAB_H=36}Palette.SubTab={Height=28,Radius=Palette.Metric.R_MD,FontOn=Palette.Typo.Bold,FontOff=Palette.Typo.Medium,TextSize=11,PadX=14,Gap=6,BgOff=Palette.Element,BgOffAlpha=1,BgOn=Palette.ElementActive,BgOnAlpha=0,TextOff=Palette.Home.Muted,TextOn=Palette.Text,StrokeOff=1,StrokeOn=0.25}local UserUIScale=1 local BUTTON_COLOR=Color3.fromRGB(220,220,220)local BUTTON_COLOR_DARK=Color3.fromRGB(160,160,160)local TabAccents={['Home']=Color3.fromRGB(230,230,230),['Main']=
@@ -2428,7 +2428,7 @@ pcall(function()
   return false
   end
   if not _WL_Check()then
-    local _EDGE=Palette.Home.Edge local _TILE=Palette.Home.Tile local _MUTE=Palette.Home.Muted local CARD_W,CARD_H=300,222 local _sg=New('ScreenGui',{Name='JEYHUB_DENIED',ResetOnSpawn=false,DisplayOrder=9999,IgnoreGuiInset=true,Parent=GetGuiParent()})local _overlay=New('Frame',{Size=UDim2.new(1,0,1,0),BackgroundColor3=Color3.fromRGB(0,0,0),BackgroundTransparency=1,Parent=_sg})Tween(_overlay,0.25,nil,nil,{BackgroundTransparency=0.45})local _card=New('Frame',{Size=UDim2.new(0,CARD_W,0,CARD_H),AnchorPoint=Vector2.new(0.5,0.5),Position=UDim2.new(0.5,0,0.5,0),BackgroundColor3=Palette.Element,BackgroundTransparency=0.04,ClipsDescendants=true,Parent=_sg})Round(_card,12)local _cardStroke=Stroke(_card,_EDGE,1,0.8)New('UIGradient',{Color=ColorSequence.new(Palette.GlassLight,Palette.Element),Rotation=100,Parent=_card})local _cardScale=New('UIScale',{Scale=0.9,Parent=_card})local function _hair(parent,y)local l=New('Frame',{Position
+    local _EDGE=Palette.Home.Edge local _TILE=Palette.Home.Tile local _MUTE=Palette.Home.Muted local CARD_W,CARD_H=300,222 local _sg=New('ScreenGui',{Name='HAMA_DE',ResetOnSpawn=false,DisplayOrder=9999,IgnoreGuiInset=true,Parent=GetGuiParent()})local _overlay=New('Frame',{Size=UDim2.new(1,0,1,0),BackgroundColor3=Color3.fromRGB(0,0,0),BackgroundTransparency=1,Parent=_sg})Tween(_overlay,0.25,nil,nil,{BackgroundTransparency=0.45})local _card=New('Frame',{Size=UDim2.new(0,CARD_W,0,CARD_H),AnchorPoint=Vector2.new(0.5,0.5),Position=UDim2.new(0.5,0,0.5,0),BackgroundColor3=Palette.Element,BackgroundTransparency=0.04,ClipsDescendants=true,Parent=_sg})Round(_card,12)local _cardStroke=Stroke(_card,_EDGE,1,0.8)New('UIGradient',{Color=ColorSequence.new(Palette.GlassLight,Palette.Element),Rotation=100,Parent=_card})local _cardScale=New('UIScale',{Scale=0.9,Parent=_card})local function _hair(parent,y)local l=New('Frame',{Position
     =UDim2.new(0,0,0,y),Size=UDim2.new(1,0,0,1),BackgroundColor3=_EDGE,BackgroundTransparency=0.7,BorderSizePixel=0,Parent=parent})New('UIGradient',{Transparency=NumberSequence.new({NumberSequenceKeypoint.new(0,1),NumberSequenceKeypoint.new(0.5,0.3),NumberSequenceKeypoint.new(1,1)}),Parent=l})return l
   end
   local _logo=New('Frame',{Position=UDim2.new(0,14,0,12),Size=UDim2.new(0,26,0,26),BackgroundColor3=_TILE,BackgroundTransparency=0.2,Parent=_card})Round(_logo,8)New('TextLabel',{BackgroundTransparency=1,Size=UDim2.new(1,0,1,0),Font=Enum.Font.GothamBlack,Text='J',TextColor3=Palette.Text,TextSize=13,Parent=_logo})New('TextLabel',{BackgroundTransparency=1,Position=UDim2.new(0,48,0,12),Size=UDim2.new(1,-140,0,15),Font=Enum.Font.GothamBold,Text='JEYHUB',TextColor3=Palette.Text,TextSize=13,TextXAlignment=Enum.TextXAlignment.Left,Parent=_card})New('TextLabel',{BackgroundTransparency=1,Position=UDim2.new(0,48,0,27),Size=UDim2.new(1,-140,0,11),Font=Enum.Font.Gotham,Text='Whitelist check',TextColor3=
@@ -3074,7 +3074,7 @@ pcall(function()
   function Section.new(parent,accent,title,subtitle)local ok,result=pcall(Section.newImpl,parent,accent,title,subtitle)if ok and result then
     return result
   end
-  warn([[[JEYHUB] Section failed to build, using safe fallback Section:]],result)local fallback=setmetatable({},Section)fallback.Accent=accent or Palette.Accent fallback.Frame=New('Frame',{Size=UDim2.new(1,0,0,0),AutomaticSize=_AutomaticSizeY or Enum.AutomaticSize.Y,BackgroundTransparency=1,Parent=parent})fallback.Body=fallback.Frame return fallback
+  warn([[[HAMA] Section failed to build, using safe fallback Section:]],result)local fallback=setmetatable({},Section)fallback.Accent=accent or Palette.Accent fallback.Frame=New('Frame',{Size=UDim2.new(1,0,0,0),AutomaticSize=_AutomaticSizeY or Enum.AutomaticSize.Y,BackgroundTransparency=1,Parent=parent})fallback.Body=fallback.Frame return fallback
   end
   local function SetOrTween(inst,instant,t,props)if instant then
     for k,v in pairs(props)do
@@ -3099,7 +3099,7 @@ pcall(function()
     return
     result
   end
-  warn([[[JEYHUB] CreateButton failed to build, using safe fallback element:]],result)return NewElementRoot(self.Body,10)
+  warn([[[HAMA] CreateButton failed to build, using safe fallback element:]],result)return NewElementRoot(self.Body,10)
   end
   local _KNOB_ON,_KNOB_OFF=UDim2.new(1,-15,0.5,0),UDim2.new(0,3,0.5,0)local _KNOB_DARK=Color3.fromRGB(18,18,21)function Section:CreateToggleImpl(config)config=(type(config)=='table')and config or{}local state=(config.Default==true)local root=NewElementRoot(self.Body,36)AddTitles(root,config.Title,config.Subtitle,56)local switch=New('Frame',{AnchorPoint=Vector2.new(1,0.5),Position=UDim2.new(1,-11,0.5,0),Size=UDim2.new(0,34,0,18),BackgroundColor3=Palette.Home.Tile,Parent=root})New('UICorner',{CornerRadius=UDim.new(1,0),Parent=switch})local switchStroke=Stroke(switch,Palette.Home.Edge,1,Palette.Home.EdgeRest)local knob=New('Frame',{AnchorPoint=Vector2.new(0,0.5),Position=_KNOB_OFF,Size=UDim2.new(0,12,0,12),BackgroundColor3=Palette.Home.Muted,Parent=switch})New('UICorner',{CornerRadius=UDim.new(1,0),Parent=knob})local click=New('TextButton',{Text='',
   BackgroundTransparency=1,Size=UDim2.new(1,0,1,0),ZIndex=2,Parent=root})local hovering=false local function render(instant)SetOrTween(switch,instant,0.2,{BackgroundColor3=state and Palette.Accent or Palette.Home.Tile})SetOrTween(switchStroke,instant,0.2,{Transparency=state and Palette.Home.EdgeActive or(hovering and Palette.Home.EdgeHover or Palette.Home.EdgeRest)})SetOrTween(knob,instant,0.22,{Position=state and _KNOB_ON or _KNOB_OFF,BackgroundColor3=state and _KNOB_DARK or(hovering and Palette.SubText or Palette.Home.Muted)})
@@ -3127,7 +3127,7 @@ pcall(function()
   )if ok and result then
     return result
   end
-  warn([[[JEYHUB] CreateToggle failed to build, using safe fallback element:]],result)return{Root=NewElementRoot(self.Body,10),Set=function()
+  warn([[[HAMA] CreateToggle failed to build, using safe fallback element:]],result)return{Root=NewElementRoot(self.Body,10),Set=function()
   end
   }
   end
@@ -3229,7 +3229,7 @@ pcall(function()
     return result
   end
   warn(
-  [[[JEYHUB] CreateSlider failed to build, using safe fallback element:]],result)return{Root=NewElementRoot(self.Body,10),Set=function()
+  [[[HAMA] CreateSlider failed to build, using safe fallback element:]],result)return{Root=NewElementRoot(self.Body,10),Set=function()
   end
   }
   end
@@ -3351,7 +3351,7 @@ pcall(function()
   )if ok and result then
     return result
   end
-  warn([[[JEYHUB] CreateDropdown failed to build, using safe fallback element:]],result)return{Root=NewElementRoot(self.Body,10),Set=function()
+  warn([[[HAMA] CreateDropdown failed to build, using safe fallback element:]],result)return{Root=NewElementRoot(self.Body,10),Set=function()
   end
   }
   end
@@ -3484,16 +3484,16 @@ pcall(function()
   )if ok and result then
     return result
   end
-  warn([[[JEYHUB] CreateColorPicker failed to build, using safe fallback element:]]
+  warn([[[HAMA] CreateColorPicker failed to build, using safe fallback element:]]
   ,result)return{Root=NewElementRoot(self.Body,10),Set=function()
   end
   }
   end
   local Library={}Library.__index=Library function Library.newImpl(title,subtitle)local self=setmetatable({},Library)self.Tabs={}self.CurrentTab=nil local parent=GetGuiParent()if not parent then
-    warn('[JEYHUB] No valid GUI parent; aborting.')return self
+    warn('[HAMA] No valid GUI parent; aborting.')return self
   end
   if not parent then
-    warn([[[JEYHUB] Can't build UI: parent GUI isn't available on this executor.]])return self
+    warn([[[HAMA] Can't build UI: parent GUI isn't available on this executor.]])return self
   end
   pcall(function()for _,child in ipairs(parent:GetChildren())do
     if child:IsA('ScreenGui')and typeof(child.Name)=='string'and string.find(child.Name,'JEYHUB')then
@@ -3501,7 +3501,7 @@ pcall(function()
     end
   end
   end
-  )local gui=New('ScreenGui',{Name='JEYHUB_UNIVERSAL',ResetOnSpawn=false,ZIndexBehavior=Enum.ZIndexBehavior.Sibling,DisplayOrder=999,Parent=parent})self.Gui=gui do
+  )local gui=New('ScreenGui',{Name='HAMA_UNIVERSAL',ResetOnSpawn=false,ZIndexBehavior=Enum.ZIndexBehavior.Sibling,DisplayOrder=999,Parent=parent})self.Gui=gui do
     local function _polish(inst)local cn=inst.ClassName if cn~='UIStroke'and cn~='ScrollingFrame'then
       return
     end
@@ -3542,7 +3542,7 @@ pcall(function()
   )
   end
   local scale=New('UIScale',{Scale=0.85,Parent=root})self.Scale=scale local topbar=New('Frame',{Size=UDim2.new(1,0,0,Palette.Metric.TOPBAR),BackgroundColor3=Palette.Glass,BackgroundTransparency=0.28,Parent=main})New('UICorner',{CornerRadius=UDim.new(0,Palette.Metric.R_WIN),Parent=topbar})New('Frame',{Size=UDim2.new(1,0,0,Palette.Metric.R_WIN),Position=UDim2.new(0,0,1,-Palette.Metric.R_WIN),BackgroundColor3=Palette.Glass,BackgroundTransparency=0.28,BorderSizePixel=0,Parent=topbar})New('UIGradient',{Color=ColorSequence.new(Palette.GlassLight,Palette.Glass),Rotation=90,Parent=topbar})New('UIGradient',{Transparency=NumberSequence.new({NumberSequenceKeypoint.new(0,1),NumberSequenceKeypoint.new(0.5,0.3),NumberSequenceKeypoint.new(1,1)}),Parent=New('Frame',{Size=UDim2.new(1,0,0,1),Position=UDim2.new(0,0,1,-1),BackgroundColor3=Palette.Home.Edge,BackgroundTransparency=0.7,BorderSizePixel=0,Parent=topbar})})local logo=New(
-  'Frame',{Size=UDim2.new(0,26,0,26),Position=UDim2.new(0,12,0.5,-13),BackgroundColor3=Palette.Home.Tile,BackgroundTransparency=0.2,Parent=topbar})Round(logo,8)local _logoJ=New('TextLabel',{Text='J',Font=Palette.Typo.Display,TextSize=13,TextColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=1,Size=UDim2.new(1,0,1,0),ZIndex=3,Parent=logo})self.LogoGradient=New('UIGradient',{Color=ColorSequence.new(Color3.fromRGB(255,255,255),Color3.fromRGB(170,170,176)),Rotation=90,Parent=_logoJ})self.Logo=logo local titleHolder=New('Frame',{Size=UDim2.new(0,110,1,0),Position=UDim2.new(0,46,0,0),BackgroundTransparency=1,Parent=topbar})New('TextLabel',{Text=(title and tostring(title))or'JEYHUB',Font=Palette.Typo.Bold,TextSize=13,TextColor3=Palette.Text,BackgroundTransparency=1,TextXAlignment=Enum.TextXAlignment.Left,Size=UDim2.new(1,0,0,14),Position=UDim2.new(0,0,0,5),Parent=titleHolder})New('TextLabel',{Text=string.upper((subtitle and tostring(subtitle))or'UNIVERSAL'),Font=Palette.Typo.Bold,
+  'Frame',{Size=UDim2.new(0,26,0,26),Position=UDim2.new(0,12,0.5,-13),BackgroundColor3=Palette.Home.Tile,BackgroundTransparency=0.2,Parent=topbar})Round(logo,8)local _logoJ=New('TextLabel',{Text='H',Font=Palette.Typo.Display,TextSize=13,TextColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=1,Size=UDim2.new(1,0,1,0),ZIndex=3,Parent=logo})self.LogoGradient=New('UIGradient',{Color=ColorSequence.new(Color3.fromRGB(255,255,255),Color3.fromRGB(170,170,176)),Rotation=90,Parent=_logoJ})self.Logo=logo local titleHolder=New('Frame',{Size=UDim2.new(0,110,1,0),Position=UDim2.new(0,46,0,0),BackgroundTransparency=1,Parent=topbar})New('TextLabel',{Text=(title and tostring(title))or'JEYHUB',Font=Palette.Typo.Bold,TextSize=13,TextColor3=Palette.Text,BackgroundTransparency=1,TextXAlignment=Enum.TextXAlignment.Left,Size=UDim2.new(1,0,0,14),Position=UDim2.new(0,0,0,5),Parent=titleHolder})New('TextLabel',{Text=string.upper((subtitle and tostring(subtitle))or'UNIVERSAL'),Font=Palette.Typo.Bold,
   TextSize=Palette.Typo.Micro,TextColor3=Palette.Home.Muted,BackgroundTransparency=1,TextXAlignment=Enum.TextXAlignment.Left,Size=UDim2.new(1,0,0,10),Position=UDim2.new(0,0,0,20),Parent=titleHolder})local searchWrap=New('Frame',{BackgroundColor3=Palette.Home.Tile,BackgroundTransparency=0.2,Size=UDim2.new(0,220,0,24),AnchorPoint=Vector2.new(0.5,0.5),Position=UDim2.new(0.5,0,0.5,0),Parent=topbar})Round(searchWrap,Palette.Metric.R_PILL)local searchWrapStroke=Stroke(searchWrap,Palette.Home.Edge,1,1)local searchIconHolder=New('Frame',{Size=UDim2.new(0,14,0,14),Position=UDim2.new(0,10,0.5,-7),BackgroundTransparency=1,Parent=searchWrap})local searchIconPixels=UI.DrawSearch(searchIconHolder,14)local function SetSearchIconColor(c)UI.TintGlyph(searchIconPixels,c,0.15)
   end
   SetSearchIconColor(Palette.TextMuted)local searchBox=New('TextBox',{Text='',PlaceholderText='Search features...',ClearTextOnFocus=false,Font=Palette.Typo.Medium,TextSize=Palette.Typo.SM,TextXAlignment=Enum.TextXAlignment.Left,
@@ -3651,7 +3651,7 @@ pcall(function()
   90,Transparency=NumberSequence.new({NumberSequenceKeypoint.new(0,1),NumberSequenceKeypoint.new(0.5,0.45),NumberSequenceKeypoint.new(1,1)}),Parent=New('Frame',{Size=UDim2.new(0,1,1,0),Position=UDim2.new(1,0,0,0),BackgroundColor3=Palette.Home.Edge,BackgroundTransparency=0.78,BorderSizePixel=0,Parent=sidebar})})local sidebarScroll=New('ScrollingFrame',{Size=UDim2.new(1,0,1,0),BackgroundTransparency=1,BorderSizePixel=0,ScrollBarThickness=2,ScrollBarImageColor3=Palette.StrokeSoft,VerticalScrollBarInset=_ScrollBarInsetAlways or Enum.ScrollBarInset.Always,CanvasSize=UDim2.new(0,0,0,0),AutomaticCanvasSize=_AutomaticSizeY or Enum.AutomaticSize.Y,Parent=sidebar})Pad(sidebarScroll,7,7,7,7)New('UIListLayout',{SortOrder=Enum.SortOrder.LayoutOrder,Padding=UDim.new(0,3),Parent=sidebarScroll})self.Sidebar=sidebarScroll local pages=New('Frame',{Size=UDim2.new(1,-(Palette.Metric.SIDEBAR+4),1,-(Palette.Metric.TOPBAR+4)),Position=UDim2.new(0,Palette.Metric.SIDEBAR,0,Palette.Metric.TOPBAR),
   BackgroundTransparency=1,ClipsDescendants=true,Parent=main})self.Pages=pages UI.SnowField(pages,{Name='PagesSnowCanvas',Inset=2,Count=6},function()return not self.Minimized
   end
-  )local miniIcon=New('Frame',{Size=UDim2.new(1,0,1,0),BackgroundColor3=Palette.Home.Tile,BackgroundTransparency=1,ClipsDescendants=false,Visible=false,Parent=root})New('UICorner',{CornerRadius=UDim.new(0,12),Parent=miniIcon})local _miniJ=New('TextLabel',{Text='J',Font=Palette.Typo.Display,TextSize=17,TextColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=1,Size=UDim2.new(1,0,1,0),ZIndex=3,Parent=miniIcon})self.MiniLabelGradient=New('UIGradient',{Color=ColorSequence.new(Color3.fromRGB(255,255,255),Color3.fromRGB(170,170,176)),Rotation=90,Parent=_miniJ})do
+  )local miniIcon=New('Frame',{Size=UDim2.new(1,0,1,0),BackgroundColor3=Palette.Home.Tile,BackgroundTransparency=1,ClipsDescendants=false,Visible=false,Parent=root})New('UICorner',{CornerRadius=UDim.new(0,12),Parent=miniIcon})local _miniJ=New('TextLabel',{Text='H',Font=Palette.Typo.Display,TextSize=17,TextColor3=Color3.fromRGB(255,255,255),BackgroundTransparency=1,Size=UDim2.new(1,0,1,0),ZIndex=3,Parent=miniIcon})self.MiniLabelGradient=New('UIGradient',{Color=ColorSequence.new(Color3.fromRGB(255,255,255),Color3.fromRGB(170,170,176)),Rotation=90,Parent=_miniJ})do
     local _md=New('Frame',{AnchorPoint=Vector2.new(1,1),Position=UDim2.new(1,-5,1,-5),Size=UDim2.new(0,6,0,6),BackgroundColor3=Palette.Success,BorderSizePixel=0,ZIndex=4,Parent=miniIcon})New('UICorner',{CornerRadius=UDim.new(1,0),Parent=_md})pcall(function()
       LoopTween(_md,1.1,{BackgroundTransparency=0.6})
     end
@@ -3750,7 +3750,7 @@ pcall(function()
   end
   end
   )if not ok then
-    warn('[JEYHUB] setMinimized failed (caught safely):',err)self.Minimized=state pcall(self._UIStateChanged)SafeSet(main,'Visible',not state)SafeSet(miniIcon,'Visible',state)
+    warn('[HAMA] setMinimized failed (caught safely):',err)self.Minimized=state pcall(self._UIStateChanged)SafeSet(main,'Visible',not state)SafeSet(miniIcon,'Visible',state)
   end
   end
   local function requestMinimize(state)if os.clock()-lastMinToggle<0.15 then
@@ -3879,7 +3879,7 @@ pcall(function()
   function Library.new(title,subtitle)local ok,result=pcall(Library.newImpl,title,subtitle)if ok and result then
     return result
   end
-  warn('[JEYHUB] Window creation failed entirely (caught safely):',result)return setmetatable({Tabs={},CurrentTab=nil},Library)
+  warn('[HAMA] Window creation failed entirely (caught safely):',result)return setmetatable({Tabs={},CurrentTab=nil},Library)
   end
   local function GetSidebarTooltip(library)if library.SidebarTooltip then
     return library.SidebarTooltip
@@ -4114,7 +4114,7 @@ pcall(function()
   )if ok and result then
     return result
   end
-  warn("[JEYHUB] Tab '"..tostring(name).."' failed to build, using safe fallback tab:",result)return{CreateSection=function()return setmetatable({Body=Instance.new('Folder')},Section)
+  warn("[HAMA] Tab '"..tostring(name).."' failed to build, using safe fallback tab:",result)return{CreateSection=function()return setmetatable({Body=Instance.new('Folder')},Section)
   end
   ,OnBuild=function()
   end
@@ -4136,10 +4136,10 @@ pcall(function()
   )
   end
   WaitForGameLoaded()local Window=nil do
-    local okWindow,windowErr=pcall(function()Window=Library.new('JEYHUB','UNIVERSAL')
+    local okWindow,windowErr=pcall(function()Window=Library.new('HAMA','UNIVERSAL')
     end
     )if not okWindow or not Window then
-      warn('[JEYHUB] Failed to build main window (caught safely):',windowErr)Window=setmetatable({Tabs={},CurrentTab=nil},Library)
+      warn('[HAMA] Failed to build main window (caught safely):',windowErr)Window=setmetatable({Tabs={},CurrentTab=nil},Library)
     end
   end
   local CreatedTabs={}for _,tabName in ipairs(
@@ -4682,7 +4682,7 @@ pcall(function()
   end
   end
   )if not ok then
-    warn('[JEYHUB] Failed to update Home tab avatar.')
+    warn('[HAMA] Failed to update Home tab avatar.')
   end
   avatarUpdating=false
   end
@@ -9280,7 +9280,7 @@ pcall(function()
   end
   end
   )if not okLoop then
-    warn('[JEYHUB] Live stats tick failed (skipped, loop continues).')
+    warn('[HAMA] Live stats tick failed (skipped, loop continues).')
   end
   task.wait((Window and Window.Minimized)and 10 or 5)
   end
@@ -15251,7 +15251,7 @@ pcall(function()
         end
       end
       if cleaned>0 then
-        warn('[JEYHUB] Cleaned up '..cleaned..[[ old incomplete animation cache, will be re-resolved when used.]])needResaveCache=true
+        warn('[HAMA] Cleaned up '..cleaned..[[ old incomplete animation cache, will be re-resolved when used.]])needResaveCache=true
       end
     end
   end
@@ -15983,7 +15983,7 @@ pcall(function()
   TextTruncate.AtEnd,TextXAlignment=Enum.TextXAlignment.Left,Parent=card})
   end
   local settingsSec=setmetatable({Body=settingsPanel,Accent=accent},Section)local function trySetting(fn)local ok,err=pcall(fn)if not ok then
-    warn('[JEYHUB] Animation settings element failed:',err)
+    warn('[HAMA] Animation settings element failed:',err)
   end
   end
   trySetting(function()settingsSec:CreateSlider({Title='Animation Speed',Subtitle='Idle/walk/run playback speed (50% - 200%)',Min=50,Max=200,Step=5,Default=math.floor((AnimConfig.speed or 1)*100+0.5),Callback=function(v)AnimConfig.speed=v/100 ctrl.speedMul=AnimConfig.speed refreshSpeed()saveAnimConfig()
@@ -16516,7 +16516,7 @@ pcall(function()
   _Tabs.Credits=function()local tab=CreatedTabs['Credits']if not tab or not tab.OnBuild then
     return
   end
-  tab:OnBuild(function()local CREDIT_USER_ID=5213095877 local MUTED=Color3.fromRGB(121,121,121)local ROW_BG=Palette.Home.Tile local ROW_BG_HOV=Palette.GlassLight local ROW_STROKE=Color3.fromRGB(190,190,190)local OK_COL=Color3.fromRGB(110,200,110)local Label=UI.Label local hero=tab:CreateSection('Credits','Designed & developed with full dedication')local accent=hero.Accent or
+  tab:OnBuild(function()local CREDIT_USER_ID=7788293419 local MUTED=Color3.fromRGB(121,121,121)local ROW_BG=Palette.Home.Tile local ROW_BG_HOV=Palette.GlassLight local ROW_STROKE=Color3.fromRGB(190,190,190)local OK_COL=Color3.fromRGB(110,200,110)local Label=UI.Label local hero=tab:CreateSection('Credits','Designed & developed with full dedication')local accent=hero.Accent or
   Palette.Accent local body=hero.Body if not body then
     return
   end
@@ -16541,10 +16541,10 @@ pcall(function()
     SafeSet(viewport,'CurrentCamera',vpCamera)
   end
   local info=New('Frame',{Position=UDim2.new(0,168,0,0),Size=UDim2.new(1,-168,1,0),BackgroundTransparency=1,Parent=heroCard})Pad(info,4,14,14,12)New('UIListLayout',{SortOrder=Enum.SortOrder.LayoutOrder,Padding=UDim.new(0,2),Parent=info})Label(info,{Size=UDim2.new(1,0,0,14),Font=Enum.Font.GothamBold,Text='CREATED BY',TextColor3=MUTED,TextSize=9,TextXAlignment=Enum.
-  TextXAlignment.Left,LayoutOrder=1})local nameLabel=Label(info,{Size=UDim2.new(1,0,0,28),Font=Enum.Font.GothamBlack,Text='Loading\u{2026}',TextColor3=Palette.Text,TextSize=22,TextXAlignment=Enum.TextXAlignment.Left,TextTruncate=Enum.TextTruncate.AtEnd,LayoutOrder=2})Label(info,{Size=UDim2.new(1,0,0,16),Font=Enum.Font.GothamMedium,Text='JEYHUB UNIVERSAL',TextColor3=Palette.TextMuted,TextSize=12,TextXAlignment=Enum.TextXAlignment.Left,LayoutOrder=3})New('Frame',{BackgroundTransparency=1,Size=UDim2.new(1,0,0,8),LayoutOrder=4,Parent=info})local miniRow=New('Frame',{BackgroundColor3=Palette.Home.Tile,BackgroundTransparency=0.35,Size=UDim2.new(1,0,0,48),LayoutOrder=5,Parent=info})Round(miniRow,10)New('UIListLayout',{FillDirection=Enum.FillDirection.Horizontal,SortOrder=Enum.SortOrder.LayoutOrder,Padding=UDim.new(0,0),Parent=miniRow})UI.CellDividers(miniRow,12,12)local function MiniStat(label,value,order)local card=New('Frame',{Size=UDim2.new(1/3,0,1,0),BackgroundTransparency=1,LayoutOrder=
+  TextXAlignment.Left,LayoutOrder=1})local nameLabel=Label(info,{Size=UDim2.new(1,0,0,28),Font=Enum.Font.GothamBlack,Text='Loading\u{2026}',TextColor3=Palette.Text,TextSize=22,TextXAlignment=Enum.TextXAlignment.Left,TextTruncate=Enum.TextTruncate.AtEnd,LayoutOrder=2})Label(info,{Size=UDim2.new(1,0,0,16),Font=Enum.Font.GothamMedium,Text='HAMA UNIVERSAL',TextColor3=Palette.TextMuted,TextSize=12,TextXAlignment=Enum.TextXAlignment.Left,LayoutOrder=3})New('Frame',{BackgroundTransparency=1,Size=UDim2.new(1,0,0,8),LayoutOrder=4,Parent=info})local miniRow=New('Frame',{BackgroundColor3=Palette.Home.Tile,BackgroundTransparency=0.35,Size=UDim2.new(1,0,0,48),LayoutOrder=5,Parent=info})Round(miniRow,10)New('UIListLayout',{FillDirection=Enum.FillDirection.Horizontal,SortOrder=Enum.SortOrder.LayoutOrder,Padding=UDim.new(0,0),Parent=miniRow})UI.CellDividers(miniRow,12,12)local function MiniStat(label,value,order)local card=New('Frame',{Size=UDim2.new(1/3,0,1,0),BackgroundTransparency=1,LayoutOrder=
   order,Parent=miniRow})Label(card,{Position=UDim2.new(0,10,0,7),Size=UDim2.new(1,-20,0,10),Font=Enum.Font.GothamBold,Text=string.upper(label),TextColor3=MUTED,TextSize=8,TextXAlignment=Enum.TextXAlignment.Left})Label(card,{Position=UDim2.new(0,10,0,21),Size=UDim2.new(1,-20,0,18),Font=Enum.Font.GothamBold,Text=value,TextColor3=Palette.Text,TextSize=12,TextXAlignment=Enum.TextXAlignment.Left,TextTruncate=Enum.TextTruncate.AtEnd})
   end
-  MiniStat('Role','Developer',1)MiniStat('Project','JEYHUB',2)MiniStat('Build','Universal',3)task.spawn(function()local okName,uname=pcall(function()return Players:GetNameFromUserIdAsync(CREDIT_USER_ID)
+  MiniStat('Role','Developer',1)MiniStat('Project','HAMA',2)MiniStat('Build','Universal',3)task.spawn(function()local okName,uname=pcall(function()return Players:GetNameFromUserIdAsync(CREDIT_USER_ID)
   end
   )pcall(function()nameLabel.Text=(okName and uname)and('@'..uname)or'@unknown'
   end
@@ -16584,8 +16584,8 @@ pcall(function()
   end
   )return row
   end
-  socialRow('TT',Color3.fromRGB(53,53,53),'TikTok','@jswhizz',1)socialRow('DC',Color3.fromRGB(56,56,56),'Discord','kkswjds',2)local about=tab:CreateSection('About','Thank you for using JEYHUB UNIVERSAL')local aboutBody=about.Body local footer=New('Frame',{Size=UDim2.new(1,0,0,104),BackgroundColor3=Palette.Home.Tile,
-  BackgroundTransparency=0.35,LayoutOrder=1,Parent=aboutBody})Round(footer,10)New('UIGradient',{Enabled=false,Color=ColorSequence.new({ColorSequenceKeypoint.new(0,accent),ColorSequenceKeypoint.new(1,Palette.Glass)}),Transparency=NumberSequence.new({NumberSequenceKeypoint.new(0,0.88),NumberSequenceKeypoint.new(1,0.97)}),Rotation=135,Parent=footer})local logo=New('Frame',{AnchorPoint=Vector2.new(0.5,0),Position=UDim2.new(0.5,0,0,12),Size=UDim2.new(0,34,0,34),BackgroundColor3=Palette.Btn.Bg,Parent=footer})Round(logo,10)Label(logo,{Size=UDim2.new(1,0,1,0),Font=Enum.Font.GothamBlack,Text='J',TextColor3=Palette.Text,TextSize=18,TextXAlignment=Enum.TextXAlignment.Center})Label(footer,{Position=UDim2.new(0,0,0,52),Size=UDim2.new(1,0,0,18),Font=Enum.Font.GothamBold,Text='JEYHUB UNIVERSAL',TextColor3=Palette.Text,TextSize=13,TextXAlignment=Enum.TextXAlignment.Center})Label(footer,{Position=UDim2.new(0,0,0,71),Size=UDim2.new(1,0,0,14),Font=Enum.Font.Gotham,Text=
+  socialRow('TT',Color3.fromRGB(53,53,53),'TikTok','@dpnvhr',1)socialRow('DC',Color3.fromRGB(56,56,56),'Discord','1bian_',2)local about=tab:CreateSection('About','Thank you for using HAMA UNIVERSAL')local aboutBody=about.Body local footer=New('Frame',{Size=UDim2.new(1,0,0,104),BackgroundColor3=Palette.Home.Tile,
+  BackgroundTransparency=0.35,LayoutOrder=1,Parent=aboutBody})Round(footer,10)New('UIGradient',{Enabled=false,Color=ColorSequence.new({ColorSequenceKeypoint.new(0,accent),ColorSequenceKeypoint.new(1,Palette.Glass)}),Transparency=NumberSequence.new({NumberSequenceKeypoint.new(0,0.88),NumberSequenceKeypoint.new(1,0.97)}),Rotation=135,Parent=footer})local logo=New('Frame',{AnchorPoint=Vector2.new(0.5,0),Position=UDim2.new(0.5,0,0,12),Size=UDim2.new(0,34,0,34),BackgroundColor3=Palette.Btn.Bg,Parent=footer})Round(logo,10)Label(logo,{Size=UDim2.new(1,0,1,0),Font=Enum.Font.GothamBlack,Text='H',TextColor3=Palette.Text,TextSize=18,TextXAlignment=Enum.TextXAlignment.Center})Label(footer,{Position=UDim2.new(0,0,0,52),Size=UDim2.new(1,0,0,18),Font=Enum.Font.GothamBold,Text='JEYHUB UNIVERSAL',TextColor3=Palette.Text,TextSize=13,TextXAlignment=Enum.TextXAlignment.Center})Label(footer,{Position=UDim2.new(0,0,0,71),Size=UDim2.new(1,0,0,14),Font=Enum.Font.Gotham,Text=
   'Built with precision, polished with detail.',TextColor3=Palette.TextMuted,TextSize=10,TextXAlignment=Enum.TextXAlignment.Center})Label(footer,{Position=UDim2.new(0,0,0,86),Size=UDim2.new(1,0,0,14),Font=Enum.Font.GothamMedium,Text='Made with '.._CHR.HEART,TextColor3=MUTED,TextSize=10,TextXAlignment=Enum.TextXAlignment.Center})
   end
   )
@@ -18232,16 +18232,16 @@ pcall(function()
   pcall(function()return(SafeHttpGet(PSHADE_URL..path,600))
   end
   )if not okFetch or type(body)~='string'or#body==0 or#body>PSHADE_MAX_BYTES then
-    warn('[JEYHUB] Preset fetch failed/abnormal size:',path)PshadeFailed[path]=os.clock()return nil
+    warn('[HAMA] Preset fetch failed/abnormal size:',path)PshadeFailed[path]=os.clock()return nil
   end
   local _ls=(typeof(loadstring)=='function'and loadstring)or(typeof(load)=='function'and load)if not _ls then
-    warn('[JEYHUB] No loadstring on this executor \u{2014} preset skipped.')return nil
+    warn('[HAMA] No loadstring on this executor \u{2014} preset skipped.')return nil
   end
   local compiled,compileErr=_ls(body)if type(compiled)~='function'then
-    warn('[JEYHUB] Preset failed to compile:',path,compileErr)PshadeFailed[path]=os.clock()return nil
+    warn('[HAMA] Preset failed to compile:',path,compileErr)PshadeFailed[path]=os.clock()return nil
   end
   local okRun,res=pcall(compiled)local sanitized=okRun and SanitizePresetTable(res)or nil if not sanitized then
-    warn('[JEYHUB] Preset returned invalid data:',path)PshadeFailed[path]=os.clock()return nil
+    warn('[HAMA] Preset returned invalid data:',path)PshadeFailed[path]=os.clock()return nil
   end
   return sanitized
   end
@@ -19076,7 +19076,7 @@ pcall(function()
     visW.global.Set(silent and false or(data.wl.global==true),true)
   end
   if heavyBlocked then
-    warn('[JEYHUB] Global Illumination NOT auto-loaded (intentional) \u{2014} it is heavy. Enable manually in Visual > World tab if needed this session.')
+    warn('[HAMA] Global Illumination NOT auto-loaded (intentional) \u{2014} it is heavy. Enable manually in Visual > World tab if needed this session.')
   end
   if type(data.wind)=='table'then
     local wd=data.wind if wd.enabled~=nil and visW.windEnabled then
@@ -19102,7 +19102,7 @@ pcall(function()
           v=Color3.new(tonumber(v.r)or 0,tonumber(v.g)or 0,tonumber(v.b)or 0)
         end
         local okSet,errSet=pcall(e.handle.Set,v,true)if not okSet then
-          warn("[JEYHUB] Preset: failed to restore '"..tostring(e.key).."':",errSet)
+          warn("[HAMA] Preset: failed to restore '"..tostring(e.key).."':",errSet)
         end
       end
     end
@@ -19665,7 +19665,7 @@ pcall(function()
   end
   )GR.glare,GR.gck=0,-1 GR.master,GR.vis,GR.expo,GR.t,GR.camLit,GR.litT=0,0,1,0,0,0 GR.lastCam,GR.lastDir,GR.discV,GR.up,GR.colKey,GR.raysShown=nil,nil,nil,nil,nil,false GR.cloudOff=Vector2.new(math.random()*50,math.random()*50)GR.nextEnv,GR.nextLit,GR.nextDust,GR.miss,GR.candAcc,GR.lowT,GR.hiT=0,0,0,0,0,0,0 GR.lvl=(GR.quality~='Auto'and QUAL[GR.quality])and GR.quality or(GR.mobile and'Medium'or'High')GR.warned=false grPollEnv()local function run(dt)local ok,err=
   pcall(grStep,dt)if not ok and not GR.warned then
-    GR.warned=true warn('[JEYHUB] God Rays:',err)
+    GR.warned=true warn('[HAMA] God Rays:',err)
   end
   end
   local okBind=pcall(function()RS_:BindToRenderStep('JeyhubGodRays',Enum.RenderPriority.Camera.Value+5,run)
@@ -20260,7 +20260,7 @@ pcall(function()
   )
   end
   CL.nextWrite,CL.nextStatus=0,0 CL.conn=RunService.Heartbeat:Connect(function(dt)local ok,err=pcall(step,dt)if not ok and not CL.warned then
-    CL.warned=true warn('[JEYHUB] Realistic Clouds:',err)
+    CL.warned=true warn('[HAMA] Realistic Clouds:',err)
   end
   end
   )
@@ -24375,25 +24375,25 @@ pcall(function()
   end
   updateGlints(camPos,dt,now)updateShadows(camPos,dt,now)pcall(engineShadows,now)pcall(softTick,dt)local okA,errA=pcall(aoTick,camPos,dt,now)if not okA and not PB.warnedAO then
     PB.warnedAO=true;
-    warn('[JEYHUB] PBR ambient occlusion:',errA)
+    warn('[HAMA] PBR ambient occlusion:',errA)
   end
   local okE,errE=pcall(edgeTick,
   camPos,dt,now)if not okE and not PB.warnedEdge then
     PB.warnedEdge=true;
-    warn('[JEYHUB] PBR edges:',errE)
+    warn('[HAMA] PBR edges:',errE)
   end
   local okM,errM=pcall(mirTick,camPos,dt,now)if not okM and not PB.warnedMir then
     PB.warnedMir=true;
-    warn('[JEYHUB] PBR reflections:',errM)
+    warn('[HAMA] PBR reflections:',errM)
   end
   local okP,errP=pcall(puddleTick,camPos,dt,now)if not okP and not PB.warnedPud then
     PB.warnedPud=true;
-    warn('[JEYHUB] PBR puddles:',errP)
+    warn('[HAMA] PBR puddles:',errP)
   end
   postTick()statusTick(now)
   end
   local function run(dt)local ok,err=pcall(step,dt)if not ok and not PB.warned then
-    PB.warned=true warn('[JEYHUB] PBR Materials:',err)
+    PB.warned=true warn('[HAMA] PBR Materials:',err)
   end
   end
   local function enable()PB.on=true finishRestore()if PB.engine then
@@ -25211,13 +25211,13 @@ pcall(function()
     focus=hrp.Position
   end
   local okB,errB=pcall(bounceTick,focus,dt,now)if not okB and not RL.warned then
-    RL.warned=true warn('[JEYHUB] Realistic Lighting:',errB)
+    RL.warned=true warn('[HAMA] Realistic Lighting:',errB)
   end
   pcall(flameTick,dt,now)pcall(haloTick,
   camPos,dt)pcall(rimTick,cam,dt)pcall(eyeTick,cam,dt,now)statusTick(now)
   end
   local function run(dt)local ok,err=pcall(step,dt)if not ok and not RL.warned then
-    RL.warned=true warn('[JEYHUB] Realistic Lighting:',err)
+    RL.warned=true warn('[HAMA] Realistic Lighting:',err)
   end
   end
   local function enable()RL.on=true RL.assign=true if RL.conn then
@@ -26441,7 +26441,7 @@ pcall(function()
     return
   end
   V.on=true V.rpf=RaycastParams.new()V.rpf.FilterType=Enum.RaycastFilterType.Exclude V.rpf.IgnoreWater=false V.acc=1 ffClear()ffSetCount(V.count)ffApply()V.conn=RS_.Heartbeat:Connect(function(dt)local ok,err=pcall(tick,dt)if not ok and not V.warned then
-    V.warned=true warn('[JEYHUB] Fireflies:',err)
+    V.warned=true warn('[HAMA] Fireflies:',err)
   end
   end
   )pcall(tick,0)
@@ -27316,7 +27316,7 @@ pcall(function()
   E.bn=0 for _,m in ipairs(E.mods)do
     if m.on then
       local ok,err=pcall(m.step,dt)if not ok and not m.warned then
-        m.warned=true warn('[JEYHUB] 3D VFX '..m.name..':',err)
+        m.warned=true warn('[HAMA] 3D VFX '..m.name..':',err)
       end
     end
   end
@@ -28265,7 +28265,7 @@ pcall(function()
   bound,hbConn=false,nil MV.lastCF=nil
   end
   local function frame(dt)local ok,err=pcall(step,dt)if not ok and not MV.warned then
-    MV.warned=true warn('[JEYHUB] Motion VFX:',err)
+    MV.warned=true warn('[HAMA] Motion VFX:',err)
   end
   if idle()then
     task.defer(function()if idle()then
@@ -29414,7 +29414,7 @@ pcall(function()
   if hrp and hum then
     local ok,err if CV.on then
       ok,err=pcall(charStep,dt,char,hrp,hum)local okP,errP=pcall(peopleStep,dt)if not okP and not CV.warnedP then
-        CV.warnedP=true warn('[JEYHUB] Character VFX:',errP)
+        CV.warnedP=true warn('[HAMA] Character VFX:',errP)
       end
     else
       ok,err=pcall(auraStep,dt,char,hrp,hum,false,false)if CV
@@ -29424,7 +29424,7 @@ pcall(function()
       CV.dipX,CV.dipV=0,0
     end
     if not ok and not CV.warned then
-      CV.warned=true warn('[JEYHUB] Character VFX:',err)
+      CV.warned=true warn('[HAMA] Character VFX:',err)
     end
   end
   for i=#CV.fx,1,-1 do
@@ -29545,7 +29545,7 @@ pcall(function()
   bound,hbConn=false,nil CV.lastChar,CV.seenFirst=nil,false
   end
   local function frame(dt)local ok,err=pcall(step,dt)if not ok and not CV.warned2 then
-    CV.warned2=true warn('[JEYHUB] Character VFX:',err)
+    CV.warned2=true warn('[HAMA] Character VFX:',err)
   end
   if idle()then
     task.defer(function()if idle()then
@@ -30299,7 +30299,7 @@ pcall(function()
   E.bn=0 for _,m in ipairs(E.mods)do
     if m.on then
       local ok,err=pcall(m.step,dt)if not ok and not m.warned then
-        m.warned=true warn('[JEYHUB] 3D VFX '..m.name..':',err)
+        m.warned=true warn('[HAMA] 3D VFX '..m.name..':',err)
       end
     end
   end
@@ -30549,12 +30549,12 @@ pcall(function()
   GothamBold,Text=_CHR.WARNING.." Tab '"..tostring(tabName).."' failed to load",TextColor3=Color3.fromRGB(100,100,100),TextSize=12,TextXAlignment=Enum.TextXAlignment.Left,Parent=card})New('TextLabel',{BackgroundTransparency=1,Size=UDim2.new(1,0,0,0),AutomaticSize=_AutomaticSizeY or Enum.AutomaticSize.Y,Font=Enum.Font.GothamMedium,Text=tostring(errMsg),TextColor3=Color3.fromRGB(183,183,183),TextSize=10,TextWrapped=true,TextXAlignment=Enum.TextXAlignment.Left,Parent=card})New('TextLabel',{BackgroundTransparency=1,Size=UDim2.new(1,0,0,0),AutomaticSize=_AutomaticSizeY or Enum.AutomaticSize.Y,Font=Enum.Font.Gotham,Text=[[Screenshot this and send it back so it can be fixed. Other tabs are unaffected.]],TextColor3=Color3.fromRGB(114,114,114),TextSize=9,TextWrapped=true,TextXAlignment=Enum.TextXAlignment.Left,Parent=card})
   end
   )if not ok then
-    warn('[JEYHUB] RenderTabBuildError itself failed for tab:',tabName)
+    warn('[HAMA] RenderTabBuildError itself failed for tab:',tabName)
   end
   end
   local function _RunTabBuild(tabLabel,buildFn)local ok,err=pcall(buildFn)if not ok
   then
-    warn('[JEYHUB] Build'..tabLabel:gsub('%s','')..'Tab failed (caught safely):',err)RenderTabBuildError(tabLabel,err)
+    warn('[HAMA] Build'..tabLabel:gsub('%s','')..'Tab failed (caught safely):',err)RenderTabBuildError(tabLabel,err)
   end
   end
   local _BuildTarget={Troll='Usefull'}local _BuildQueue={}local function _BuildPump()if _BUILD.running then
@@ -38571,7 +38571,7 @@ if false then
   )if not okFx then
     pcall(function()getgenv().JH_UNIFIED_RIPPLE=false
   end
-  )warn('[JEYHUB] UI FX failed: '..tostring(errFx))
+  )warn('[HAMA] UI FX failed: '..tostring(errFx))
   end
   end
   do
@@ -38891,7 +38891,7 @@ if false then
   end
   end
   )if not okW then
-    warn('[JEYHUB] Window FX failed: '..tostring(errW))
+    warn('[HAMA] Window FX failed: '..tostring(errW))
   end
   end
   task.wait();
