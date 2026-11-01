@@ -10552,7 +10552,7 @@ pcall(function() print(('[JEYHUB] Access granted as %s'):format(tostring(_wlRole
       return true
   end
   return false
-endalse
+end
   end
   local _wbTpCard=H.CreateMainButton({Title='WB Teleport',Subtitle='Bring wheelbarrow to target',Callback=function()if not _wbAuthorized()then
     return
