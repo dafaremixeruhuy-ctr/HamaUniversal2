@@ -1,100 +1,3 @@
-
--- ============================================================
--- WHITELIST VIA GITHUB RAW (4 FILE TERPISAH)
--- ============================================================
-
--- >>> GANTI 4 LINK DI BAWAH INI DENGAN LINK RAW PUNYA LO <<<
-local URL_DEV   = "https://raw.githubusercontent.com/dafaremixeruhuy-ctr/HamaUniversal2/main/dev.txt"
-local URL_PRIO  = "https://raw.githubusercontent.com/dafaremixeruhuy-ctr/HamaUniversal2/main/priority.txt"
-local URL_PREM  = "https://raw.githubusercontent.com/dafaremixeruhuy-ctr/HamaUniversal2/main/premium.txt"
-local URL_REG   = "https://raw.githubusercontent.com/dafaremixeruhuy-ctr/HamaUniversal2/main/whitelist.txt"
-
-local MY_NAME = "dpnvhr" -- GANTI PAKE USERNAME LO
-
-local _WL_CACHE = {}
-local _WL_DEV_SET  = { [MY_NAME] = true }
-local _WL_PREM_SET = { [MY_NAME] = true }
-local _WL_PRIO_SET = { [MY_NAME] = true }
-local _WL_REG_SET  = { [MY_NAME] = true }
-
-local function _WL_Fetch(url)
-  if not url or url == "" then return "" end
-  local now = os.time()
-  local hit = _WL_CACHE[url]
-  if hit and hit.exp and hit.exp > now then return hit.body end
-  
-  local body
-  pcall(function()
-    if typeof(syn) == 'table' and typeof(syn.request) == 'function' then
-      body = syn.request({ Url = url, Method = 'GET' }).Body
-    elseif typeof(http_request) == 'function' then
-      body = http_request({ Url = url, Method = 'GET' }).Body
-    elseif typeof(request) == 'function' then
-      body = request({ Url = url, Method = 'GET' }).Body
-    else
-      body = game:GetService('HttpService'):GetAsync(url)
-    end
-  end)
-  
-  if type(body) == 'string' and #body > 0 then
-    _WL_CACHE[url] = { body = body, exp = now + 300 }
-  end
-  return body or ""
-end
-
-local function _WL_ParseList(body, targetSet)
-  if type(body) ~= 'string' then return end
-  for line in body:gmatch('[^\r\n]+') do
-    local name = line:gsub('^%s+', ''):gsub('%s+$', '') -- hapus spasi
-    if name ~= '' and name:sub(1, 1) ~= '#' then
-      targetSet[name] = true
-    end
-  end
-end
-
-local function _WL_Load()
-  local devBody  = _WL_Fetch(URL_DEV)
-  local premBody = _WL_Fetch(URL_PREM)
-  local prioBody = _WL_Fetch(URL_PRIO)
-  local regBody  = _WL_Fetch(URL_REG)
-
-  _WL_ParseList(devBody, _WL_DEV_SET)
-  _WL_ParseList(premBody, _WL_PREM_SET)
-  _WL_ParseList(prioBody, _WL_PRIO_SET)
-  _WL_ParseList(regBody, _WL_REG_SET)
-
-  -- Pastikan nama lo selalu masuk
-  _WL_DEV_SET[MY_NAME]  = true
-  _WL_PREM_SET[MY_NAME] = true
-  _WL_PRIO_SET[MY_NAME] = true
-  _WL_REG_SET[MY_NAME]  = true
-
-  if typeof(getgenv) == 'function' then
-    local g = getgenv()
-    g._JEYHUB_PREM_USERS = _WL_PREM_SET
-    g._JEYHUB_DEV_USERS  = _WL_DEV_SET
-    g._JEYHUB_PRIO_USERS = _WL_PRIO_SET
-    g._JEYHUB_REG_USERS  = _WL_REG_SET
-  end
-end
-
-_WL_Load()
-
-local function _WL_Check()
-  local lp = Players and Players.LocalPlayer
-  if not lp then return false end
-  local name = lp.Name
-  if _WL_DEV_SET[name] or _WL_PREM_SET[name] or _WL_PRIO_SET[name] or _WL_REG_SET[name] then
-    return true
-  end
-  -- Coba load ulang sekali lagi kalau gagal
-  task.wait(0.4)
-  _WL_Load()
-  if _WL_DEV_SET[name] or _WL_PREM_SET[name] or _WL_PRIO_SET[name] or _WL_REG_SET[name] then
-    return true
-  end
-  return false
-end
 do
     local _env=_G if _env.JH_IndexConns then
       for _,c in ipairs(_env.JH_IndexConns)do
@@ -2427,155 +2330,104 @@ do
   function UI.Card(parent,size,depth,borderAlpha)local f=Instance.new('Frame')f.Size=size or UDim2.new(1,0,0,48)f.BackgroundColor3=depth or Palette.Glass f.
   BackgroundTransparency=0.12 f.BorderSizePixel=0 f.Parent=parent UI.Round(f,10)UI.Stroke(f,Palette.Border,1,borderAlpha or 0.5)return f
   end
-  -- ============================================================
--- WHITELIST VIA GITHUB RAW — milik lo
--- ============================================================
-
--- >>> GANTI URL INI <<<
-local _WL_RAW_URL = "https://raw.githubusercontent.com/USERNAME/REPO/main/wl.txt"
-
--- Nama lo — selalu dianggap DEV walaupun GitHub down
-local MY_NAME = "dpnvhr"   -- ganti username Roblox lo
-
--- Cache TTL (detik) — biar nggak spam GitHub
-local _WL_CACHE_TTL = 300
-
-local _WL_CACHE = {}
-local _WL_DEV_SET  = { [MY_NAME] = true }
-local _WL_PREM_SET = { [MY_NAME] = true }
-local _WL_PRIO_SET = { [MY_NAME] = true }
-local _WL_REG_SET  = { [MY_NAME] = true }
-local _WL_LAST_FETCH = 0
-local _WL_LAST_BODY  = nil
-
--- Ambil body dari URL, cache di _WL_CACHE
-local function _WL_Fetch(url)
-  local now = os.time()
-  local hit = _WL_CACHE[url]
-  if hit and hit.exp and hit.exp > now and type(hit.body) == 'string' then
-    return hit.body
-  end
-
-  local body
-  pcall(function()
-    if typeof(syn) == 'table' and typeof(syn.request) == 'function' then
-      body = syn.request({ Url = url, Method = 'GET' }).Body
-    elseif typeof(http_request) == 'function' then
-      body = http_request({ Url = url, Method = 'GET' }).Body
-    elseif typeof(http) == 'table' and typeof(http.request) == 'function' then
-      local res = http.request({ Url = url, Method = 'GET' })
-      body = res.Body or res.body
-    elseif typeof(request) == 'function' then
-      body = request({ Url = url, Method = 'GET' }).Body
-    elseif typeof(fluxus) == 'table' and typeof(fluxus.request) == 'function' then
-      body = fluxus.request({ Url = url, Method = 'GET' }).Body
-    else
-      body = game:GetService('HttpService'):GetAsync(url)
-    end
-  end)
-
-  if type(body) == 'string' and #body > 0 and #body < (1024 * 1024) then
-    _WL_CACHE[url] = { body = body, exp = now + _WL_CACHE_TTL }
-    _WL_LAST_BODY = body
-  end
-  return body
-end
-
--- Parse "ROLE|NAMA" per baris
-local function _WL_Parse(body)
-  local sets = {
-    DEV  = {},
-    PRIO = {},
-    PREM = {},
-    REG  = {},
-  }
-  if type(body) ~= 'string' then return sets end
-
-  for line in body:gmatch('[^\r\n]+') do
-    line = line:gsub('^%s+', ''):gsub('%s+$', '')
-    if line ~= '' and line:sub(1, 1) ~= '#' then
-      local role, name = line:match('^(%u+)%s*|%s*(.-)$')
-      if role and name and name ~= '' and sets[role] then
-        sets[role][name] = true
+  local _WHITELIST_URL = "https://raw.githubusercontent.com/USERNAME/REPO/main/whitelist.txt"
+local _PREMIUM_URL   = "https://raw.githubusercontent.com/USERNAME/REPO/main/premium.txt"
+local _DEV_URL       = "https://raw.githubusercontent.com/USERNAME/REPO/main/dev.txt"
+local _WL_CACHE={}local _WL_CACHE_TTL=300 do
+    if typeof(getgenv)=='function'then
+      local _g=getgenv()if type(_g._JEYHUB_WL_CACHE)=='table'then
+        _WL_CACHE=_g._JEYHUB_WL_CACHE
       end
     end
   end
-  return sets
-end
-
--- Build semua set dari GitHub + nama lo selalu di-include
-local function _WL_Load()
-  local body = _WL_Fetch(_WL_RAW_URL) or _WL_LAST_BODY
-  local parsed = _WL_Parse(body)
-
-  _WL_DEV_SET  = parsed.DEV  or {}
-  _WL_PREM_SET = parsed.PREM or {}
-  _WL_PRIO_SET = parsed.PRIO or {}
-  _WL_REG_SET  = parsed.REG  or {}
-
-  -- Developer (lo) selalu di semua set
-  _WL_DEV_SET[MY_NAME]  = true
-  _WL_PREM_SET[MY_NAME] = true
-  _WL_PRIO_SET[MY_NAME] = true
-  _WL_REG_SET[MY_NAME]  = true
-
-  _WL_LAST_FETCH = os.time()
-
-  -- Simpan ke getgenv biar fitur lain baca
-  if typeof(getgenv) == 'function' then
-    local g = getgenv()
-    g._JEYHUB_PREM_USERS = _WL_PREM_SET
-    g._JEYHUB_DEV_USERS  = _WL_DEV_SET
-    g._JEYHUB_PRIO_USERS = _WL_PRIO_SET
-    g._JEYHUB_REG_USERS  = _WL_REG_SET
+  local function _WL_Fetch(url)local now=os.time()local hit=_WL_CACHE[url]if hit and hit.exp and hit.exp>now and type(hit.body)=='string'and#hit.body>0 then
+    return hit.body
   end
-
-  return parsed
-end
-
--- Load pertama
-_WL_Load()
-
--- Cek akses
-local function _WL_Check()
-  local lp = Players and Players.LocalPlayer
-  if not lp then return false end
-  local name = lp.Name
-  if _WL_DEV_SET[name]  then return true, 'DEV'  end
-  if _WL_PREM_SET[name] then return true, 'PREM' end
-  if _WL_PRIO_SET[name] then return true, 'PRIO' end
-  if _WL_REG_SET[name]  then return true, 'REG'  end
-
-  -- Retry sekali kalau akses ditolak & data terakhir kosong
-  if _WL_LAST_FETCH == 0 or (#(next(_WL_DEV_SET) or "") == 0) then
-    task.wait(0.4)
-    _WL_Load()
-    if _WL_DEV_SET[name]  then return true, 'DEV'  end
-    if _WL_PREM_SET[name] then return true, 'PREM' end
-    if _WL_PRIO_SET[name] then return true, 'PRIO' end
-    if _WL_REG_SET[name]  then return true, 'REG'  end
+  local body pcall(function()if typeof(syn)=='table'and typeof(syn.request)=='function'then
+    body=syn.request({Url=url,Method='GET'}).Body
+  elseif typeof(http_request)=='function'then
+    body=http_request({Url
+    =url,Method='GET'}).Body
+  elseif typeof(http)=='table'and typeof(http.request)=='function'then
+    local res=http.request({Url=url,Method='GET'})body=res.Body or res.body
+  elseif typeof(fluxus)=='table'and typeof(fluxus.request)=='function'then
+    body=fluxus.request({Url=url,Method='GET'}).Body
+  elseif typeof(request)=='function'then
+    body=request({Url=url,Method='GET'}).Body
+  else
+    body=game:GetService('HttpService'):GetAsync(url)
   end
-  return false, nil
-end
-
--- Refresh berkala (biar perubahan GitHub kepakai tanpa restart)
-task.spawn(function()
-  while task.wait(600) do
-    if not IsCurrentRun() then break end
-    pcall(_WL_Load)
   end
-end)
-
-local _wlOk, _wlRole = _WL_Check()
-
-if not _wlOk then
-  -- ... blok "Access denied" lo tetap sama persis ...
-  -- ... (tidak perlu diubah) ...
-  return
-end
-
--- (opsional) tampilkan role di console
-pcall(function() print(('[JEYHUB] Access granted as %s'):format(tostring(_wlRole))) end)
+  )if type(body)=='string'and#body>0 and#body<(1024*1024)then
+    _WL_CACHE[url]={body=body,exp=now+_WL_CACHE_TTL}local _wlCount=0 local _wlOldest,_wlOldestExp=nil,math.huge for k,v in pairs(_WL_CACHE)do
+      _wlCount=_wlCount+1 local e=tonumber(v and v.exp)or 0 if e<_wlOldestExp then
+        _wlOldest,_wlOldestExp=k,e
+      end
+    end
+    if _wlCount>20 and _wlOldest then
+      _WL_CACHE[_wlOldest]=nil
+    end
+    if typeof(getgenv)=='function'then
+      local _g=getgenv()if type(_g)=='table'then
+        _g._JEYHUB_WL_CACHE=_WL_CACHE
+      end
+    end
+  end
+  return body
+  end
+  local function _WL_ParseSet(body)local set={}if type(body)==
+  'string'then
+    for line in body:gmatch('[^\r\n]+')do
+      local name=line:match('^%s*(.-)%s*$')if name and name~=''then
+        set[name]=true
+      end
+    end
+  end
+  return set
+  end
+  do
+    local pending,t0=0,os.clock()for _,u in ipairs({_PREMIUM_URL,_DEV_URL,_WHITELIST_URL})do
+      pending=pending+1 task.spawn(function()pcall(_WL_Fetch,u)pending=pending-1
+    end
+    )
+  end
+  while pending>0 and os.clock()-t0<15 do
+    task.wait()
+  end
+  end
+  local _WL_PREM_SET=_WL_ParseSet(_WL_Fetch(_PREMIUM_URL)or'')local _WL_DEV_SET=_WL_ParseSet(_WL_Fetch(_DEV_URL)or'')
+---- Auto-whitelist khusus owner (nama kamu saja)
+pcall(function()
+    local lp = game:GetService('Players').LocalPlayer
+    if lp and lp.Name == "dpnvhr" then  -- GANTI dengan nama Roblox kamu
+      _WL_PREM_SET[lp.Name] = true
+      _WL_DEV_SET[lp.Name]  = true
+    end
+  end)
+  getgenv()._JEYHUB_PREM_USERS=_WL_PREM_SET getgenv()._JEYHUB_DEV_USERS=_WL_DEV_SET local function _WL_Check()if not LocalPlayer then
+    return false
+  end
+  local name=LocalPlayer.Name if _WL_DEV_SET[name]then
+    return true
+  end
+  if _WL_PREM_SET[name]then
+    return true
+  end
+  local data=_WL_Fetch(_WHITELIST_URL)if not data then
+    task.wait(0.4)_WL_CACHE[_WHITELIST_URL]=nil data=_WL_Fetch(_WHITELIST_URL)
+  end
+  if not data then
+    return false
+  end
+  for line in data:gmatch('[^\r\n]+')do
+    if line:match('^%s*(.-)%s*$')==
+    name then
+      return true
+    end
+  end
+  return false
+  end
+  if not _WL_Check()then
     local _EDGE=Palette.Home.Edge local _TILE=Palette.Home.Tile local _MUTE=Palette.Home.Muted local CARD_W,CARD_H=300,222 local _sg=New('ScreenGui',{Name='JEYHUB_DENIED',ResetOnSpawn=false,DisplayOrder=9999,IgnoreGuiInset=true,Parent=GetGuiParent()})local _overlay=New('Frame',{Size=UDim2.new(1,0,1,0),BackgroundColor3=Color3.fromRGB(0,0,0),BackgroundTransparency=1,Parent=_sg})Tween(_overlay,0.25,nil,nil,{BackgroundTransparency=0.45})local _card=New('Frame',{Size=UDim2.new(0,CARD_W,0,CARD_H),AnchorPoint=Vector2.new(0.5,0.5),Position=UDim2.new(0.5,0,0.5,0),BackgroundColor3=Palette.Element,BackgroundTransparency=0.04,ClipsDescendants=true,Parent=_sg})Round(_card,12)local _cardStroke=Stroke(_card,_EDGE,1,0.8)New('UIGradient',{Color=ColorSequence.new(Palette.GlassLight,Palette.Element),Rotation=100,Parent=_card})local _cardScale=New('UIScale',{Scale=0.9,Parent=_card})local function _hair(parent,y)local l=New('Frame',{Position
     =UDim2.new(0,0,0,y),Size=UDim2.new(1,0,0,1),BackgroundColor3=_EDGE,BackgroundTransparency=0.7,BorderSizePixel=0,Parent=parent})New('UIGradient',{Transparency=NumberSequence.new({NumberSequenceKeypoint.new(0,1),NumberSequenceKeypoint.new(0.5,0.3),NumberSequenceKeypoint.new(1,1)}),Parent=l})return l
   end
@@ -4284,7 +4136,7 @@ pcall(function() print(('[JEYHUB] Access granted as %s'):format(tostring(_wlRole
   )
   end
   WaitForGameLoaded()local Window=nil do
-    local okWindow,windowErr=pcall(function()Window=Library.new('HAMA','UNIVERSAL')
+    local okWindow,windowErr=pcall(function()Window=Library.new('JEYHUB','UNIVERSAL')
     end
     )if not okWindow or not Window then
       warn('[JEYHUB] Failed to build main window (caught safely):',windowErr)Window=setmetatable({Tabs={},CurrentTab=nil},Library)
@@ -10541,18 +10393,13 @@ pcall(function() print(('[JEYHUB] Access granted as %s'):format(tostring(_wlRole
   end
   })local _wbLocalName=''pcall(function()_wbLocalName=game:GetService('Players').LocalPlayer.Name
   end
-  )local function _wbAuthorized()
-  local n=_wbLocalName
-  -- Cek dari getgenv yang udah di-set sama whitelist GitHub
-  if getgenv()._JEYHUB_DEV_USERS and getgenv()._JEYHUB_DEV_USERS[n]==true then
-      return true
+  )local function _wbAuthorized()local n=_wbLocalName if _WL_DEV_SET and _WL_DEV_SET[n]==true then
+    return true
   end
-  -- (Opsional) Biarin Premium juga bisa pake fitur ini, hapus aja 3 baris di bawah kalau cuma Dev yang boleh
-  if getgenv()._JEYHUB_PREM_USERS and getgenv()._JEYHUB_PREM_USERS[n]==true then
-      return true
+  if _WL_PREM_SET and _WL_PREM_SET[n]==true then
+    return true
   end
   return false
-end
   end
   local _wbTpCard=H.CreateMainButton({Title='WB Teleport',Subtitle='Bring wheelbarrow to target',Callback=function()if not _wbAuthorized()then
     return
@@ -16669,7 +16516,7 @@ end
   _Tabs.Credits=function()local tab=CreatedTabs['Credits']if not tab or not tab.OnBuild then
     return
   end
-  tab:OnBuild(function()local CREDIT_USER_ID=7788293419 local MUTED=Color3.fromRGB(121,121,121)local ROW_BG=Palette.Home.Tile local ROW_BG_HOV=Palette.GlassLight local ROW_STROKE=Color3.fromRGB(190,190,190)local OK_COL=Color3.fromRGB(110,200,110)local Label=UI.Label local hero=tab:CreateSection('Credits','Designed & developed with full dedication')local accent=hero.Accent or
+  tab:OnBuild(function()local CREDIT_USER_ID=5213095877 local MUTED=Color3.fromRGB(121,121,121)local ROW_BG=Palette.Home.Tile local ROW_BG_HOV=Palette.GlassLight local ROW_STROKE=Color3.fromRGB(190,190,190)local OK_COL=Color3.fromRGB(110,200,110)local Label=UI.Label local hero=tab:CreateSection('Credits','Designed & developed with full dedication')local accent=hero.Accent or
   Palette.Accent local body=hero.Body if not body then
     return
   end
@@ -16737,7 +16584,7 @@ end
   end
   )return row
   end
-  socialRow('TT',Color3.fromRGB(53,53,53),'TikTok','@dpnvhr',1)socialRow('DC',Color3.fromRGB(56,56,56),'Discord','1bian_',2)local about=tab:CreateSection('About','Thank you for using JEYHUB UNIVERSAL')local aboutBody=about.Body local footer=New('Frame',{Size=UDim2.new(1,0,0,104),BackgroundColor3=Palette.Home.Tile,
+  socialRow('TT',Color3.fromRGB(53,53,53),'TikTok','@jswhizz',1)socialRow('DC',Color3.fromRGB(56,56,56),'Discord','kkswjds',2)local about=tab:CreateSection('About','Thank you for using JEYHUB UNIVERSAL')local aboutBody=about.Body local footer=New('Frame',{Size=UDim2.new(1,0,0,104),BackgroundColor3=Palette.Home.Tile,
   BackgroundTransparency=0.35,LayoutOrder=1,Parent=aboutBody})Round(footer,10)New('UIGradient',{Enabled=false,Color=ColorSequence.new({ColorSequenceKeypoint.new(0,accent),ColorSequenceKeypoint.new(1,Palette.Glass)}),Transparency=NumberSequence.new({NumberSequenceKeypoint.new(0,0.88),NumberSequenceKeypoint.new(1,0.97)}),Rotation=135,Parent=footer})local logo=New('Frame',{AnchorPoint=Vector2.new(0.5,0),Position=UDim2.new(0.5,0,0,12),Size=UDim2.new(0,34,0,34),BackgroundColor3=Palette.Btn.Bg,Parent=footer})Round(logo,10)Label(logo,{Size=UDim2.new(1,0,1,0),Font=Enum.Font.GothamBlack,Text='J',TextColor3=Palette.Text,TextSize=18,TextXAlignment=Enum.TextXAlignment.Center})Label(footer,{Position=UDim2.new(0,0,0,52),Size=UDim2.new(1,0,0,18),Font=Enum.Font.GothamBold,Text='JEYHUB UNIVERSAL',TextColor3=Palette.Text,TextSize=13,TextXAlignment=Enum.TextXAlignment.Center})Label(footer,{Position=UDim2.new(0,0,0,71),Size=UDim2.new(1,0,0,14),Font=Enum.Font.Gotham,Text=
   'Built with precision, polished with detail.',TextColor3=Palette.TextMuted,TextSize=10,TextXAlignment=Enum.TextXAlignment.Center})Label(footer,{Position=UDim2.new(0,0,0,86),Size=UDim2.new(1,0,0,14),Font=Enum.Font.GothamMedium,Text='Made with '.._CHR.HEART,TextColor3=MUTED,TextSize=10,TextXAlignment=Enum.TextXAlignment.Center})
   end
@@ -35381,7 +35228,7 @@ end
   local _WHITE_N = 36
   local _BLACK_N = 25
   local _SPAM_BYPASS_USERS = _WL_DEV_SET or {}
-  local _PREMIUM_USERS = getgenv()._JEYHUB_PRIO_USERS or _WL_PREM_SET or {}
+  local _PREMIUM_USERS = _WL_PREM_SET or {}
   local function _IsDevInServer()
     local found = false
     pcall(function()
@@ -39407,12 +39254,11 @@ if false then
   end
   end
   )if _lp268 then
-      _lp268.AncestryChanged:Connect(function()
-    if not _lp268.Parent then
-     _doRejoin268()
+    _lp268.AncestryChanged:Connect(function()if not _lp268.Parent then
+      _doRejoin268()
     end
   end
   )
-end
-end
-return Window
+  end
+  end
+  )()return Window
