@@ -39407,11 +39407,12 @@ if false then
   end
   end
   )if _lp268 then
-    _lp268.AncestryChanged:Connect(function()if not _lp268.Parent then
+      _lp268.AncestryChanged:Connect(function()
+    if not _lp268.Parent then
       _doRejoin268()
     end
   end
   )
-  end
-  end
-  )()return Window
+end
+end
+return Window
