@@ -4,12 +4,12 @@
 -- ============================================================
 
 -- >>> GANTI 4 LINK DI BAWAH INI DENGAN LINK RAW PUNYA LO <<<
-local URL_DEV   = "https://raw.githubusercontent.com/dafaremixeruhuy-ctr/HamaUniversal2/refs/heads/main/dev.txt"
-local URL_PREM  = "https://raw.githubusercontent.com/dafaremixeruhuy-ctr/HamaUniversal2/refs/heads/main/premium.txt"
-local URL_PRIO  = "https://raw.githubusercontent.com/dafaremixeruhuy-ctr/HamaUniversal2/refs/heads/main/priority.txt"
-local URL_REG   = "https://raw.githubusercontent.com/dafaremixeruhuy-ctr/HamaUniversal2/refs/heads/main/whitelist.txt"
+local URL_DEV   = "https://raw.githubusercontent.com/dafaremixeruhuy-ctr/HamaUniversal2/main/dev.txt"
+local URL_PRIO  = "https://raw.githubusercontent.com/dafaremixeruhuy-ctr/HamaUniversal2/main/priority.txt"
+local URL_PREM  = "https://raw.githubusercontent.com/dafaremixeruhuy-ctr/HamaUniversal2/main/premium.txt"
+local URL_REG   = "https://raw.githubusercontent.com/dafaremixeruhuy-ctr/HamaUniversal2/main/whitelist.txt"
 
-local MY_NAME = "dpnvhr","fire6uns" -- GANTI PAKE USERNAME LO
+local MY_NAME = "dpnvhr" -- GANTI PAKE USERNAME LO
 
 local _WL_CACHE = {}
 local _WL_DEV_SET  = { [MY_NAME] = true }
