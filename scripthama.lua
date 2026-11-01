@@ -2330,9 +2330,9 @@ do
   function UI.Card(parent,size,depth,borderAlpha)local f=Instance.new('Frame')f.Size=size or UDim2.new(1,0,0,48)f.BackgroundColor3=depth or Palette.Glass f.
   BackgroundTransparency=0.12 f.BorderSizePixel=0 f.Parent=parent UI.Round(f,10)UI.Stroke(f,Palette.Border,1,borderAlpha or 0.5)return f
   end
-  local _WHITELIST_URL = "https://raw.githubusercontent.com/USERNAME/REPO/main/whitelist.txt"
-local _PREMIUM_URL   = "https://raw.githubusercontent.com/USERNAME/REPO/main/premium.txt"
-local _DEV_URL       = "https://raw.githubusercontent.com/USERNAME/REPO/main/dev.txt"
+  local _WHITELIST_URL = "https://raw.githubusercontent.com/dafaremixeruhuy/REPO/HamaUniversal2/whitelist.txt"
+local _PREMIUM_URL   = "https://raw.githubusercontent.com/dafaremixeruhuy/REPO/HamaUniversal2/premium.txt"
+local _DEV_URL       = "https://raw.githubusercontent.com/dafaremixeruhuy/REPO/HamaUniversal2/dev.txt"
 local _WL_CACHE={}local _WL_CACHE_TTL=300 do
     if typeof(getgenv)=='function'then
       local _g=getgenv()if type(_g._JEYHUB_WL_CACHE)=='table'then
