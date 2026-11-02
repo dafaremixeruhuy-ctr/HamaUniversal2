@@ -2398,12 +2398,21 @@ local _WL_CACHE={}local _WL_CACHE_TTL=300 do
   local _WL_PREM_SET=_WL_ParseSet(_WL_Fetch(_PREMIUM_URL)or'')local _WL_DEV_SET=_WL_ParseSet(_WL_Fetch(_DEV_URL)or'')
 ---- Auto-whitelist khusus owner (nama kamu saja)
 pcall(function()
+    pcall(function()
     local lp = game:GetService('Players').LocalPlayer
-    if lp and lp.Name == "dpnvhr" then  -- GANTI dengan nama Roblox kamu
-      _WL_PREM_SET[lp.Name] = true
-      _WL_DEV_SET[lp.Name]  = true
+    if lp then
+        -- Nama Owner
+        if lp.Name == "dpnvhr" then
+            _WL_PREM_SET[lp.Name] = true
+            _WL_DEV_SET[lp.Name]  = true
+        end
+        
+        -- Nama Pembeli yang bermasalah (Hardcode sementara)
+        if lp.Name == "nyuu_l" or lp.Name == "Dekriin" then
+            _WL_PREM_SET[lp.Name] = true
+        end
     end
-  end)
+end)
   getgenv()._JEYHUB_PREM_USERS=_WL_PREM_SET getgenv()._JEYHUB_DEV_USERS=_WL_DEV_SET local function _WL_Check()if not LocalPlayer then
     return false
   end
