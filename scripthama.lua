@@ -2331,7 +2331,7 @@ do
   BackgroundTransparency=0.12 f.BorderSizePixel=0 f.Parent=parent UI.Round(f,10)UI.Stroke(f,Palette.Border,1,borderAlpha or 0.5)return f
   end
   local _WHITELIST_URL = "https://raw.githubusercontent.com/dafaremixeruhuy-ctr/HamaUniversal2/refs/heads/main/whitelist.txt"
-local _PREMIUM_URL   = "https://raw.githubusercontent.com/dafaremixeruhuy-ctr/HamaUniversal2/refs/heads/main/premium.txt"
+local _PREMIUM_URL   = "https://github.com/dafaremixeruhuy-ctr/HamaUniversal2/raw/refs/heads/main/premium.txt"
 local _DEV_URL       = "https://raw.githubusercontent.com/dafaremixeruhuy-ctr/HamaUniversal2/refs/heads/main/dev.txt"
 local _WL_CACHE={}local _WL_CACHE_TTL=300 do
     if typeof(getgenv)=='function'then
@@ -2398,21 +2398,12 @@ local _WL_CACHE={}local _WL_CACHE_TTL=300 do
   local _WL_PREM_SET=_WL_ParseSet(_WL_Fetch(_PREMIUM_URL)or'')local _WL_DEV_SET=_WL_ParseSet(_WL_Fetch(_DEV_URL)or'')
 ---- Auto-whitelist khusus owner (nama kamu saja)
 pcall(function()
-    pcall(function()
     local lp = game:GetService('Players').LocalPlayer
-    if lp then
-        -- Nama Owner
-        if lp.Name == "dpnvhr" then
-            _WL_PREM_SET[lp.Name] = true
-            _WL_DEV_SET[lp.Name]  = true
-        end
-        
-        -- Nama Pembeli yang bermasalah (Hardcode sementara)
-        if lp.Name == "nyuu_l" or lp.Name == "Dekriin" then
-            _WL_PREM_SET[lp.Name] = true
-        end
+    if lp and lp.Name == "dpnvhr" then  -- GANTI dengan nama Roblox kamu
+      _WL_PREM_SET[lp.Name] = true
+      _WL_DEV_SET[lp.Name]  = true
     end
-end)
+  end)
   getgenv()._JEYHUB_PREM_USERS=_WL_PREM_SET getgenv()._JEYHUB_DEV_USERS=_WL_DEV_SET local function _WL_Check()if not LocalPlayer then
     return false
   end
@@ -2440,9 +2431,9 @@ end)
     local _EDGE=Palette.Home.Edge local _TILE=Palette.Home.Tile local _MUTE=Palette.Home.Muted local CARD_W,CARD_H=300,222 local _sg=New('ScreenGui',{Name='HAMA_DE',ResetOnSpawn=false,DisplayOrder=9999,IgnoreGuiInset=true,Parent=GetGuiParent()})local _overlay=New('Frame',{Size=UDim2.new(1,0,1,0),BackgroundColor3=Color3.fromRGB(0,0,0),BackgroundTransparency=1,Parent=_sg})Tween(_overlay,0.25,nil,nil,{BackgroundTransparency=0.45})local _card=New('Frame',{Size=UDim2.new(0,CARD_W,0,CARD_H),AnchorPoint=Vector2.new(0.5,0.5),Position=UDim2.new(0.5,0,0.5,0),BackgroundColor3=Palette.Element,BackgroundTransparency=0.04,ClipsDescendants=true,Parent=_sg})Round(_card,12)local _cardStroke=Stroke(_card,_EDGE,1,0.8)New('UIGradient',{Color=ColorSequence.new(Palette.GlassLight,Palette.Element),Rotation=100,Parent=_card})local _cardScale=New('UIScale',{Scale=0.9,Parent=_card})local function _hair(parent,y)local l=New('Frame',{Position
     =UDim2.new(0,0,0,y),Size=UDim2.new(1,0,0,1),BackgroundColor3=_EDGE,BackgroundTransparency=0.7,BorderSizePixel=0,Parent=parent})New('UIGradient',{Transparency=NumberSequence.new({NumberSequenceKeypoint.new(0,1),NumberSequenceKeypoint.new(0.5,0.3),NumberSequenceKeypoint.new(1,1)}),Parent=l})return l
   end
-  local _logo=New('Frame',{Position=UDim2.new(0,14,0,12),Size=UDim2.new(0,26,0,26),BackgroundColor3=_TILE,BackgroundTransparency=0.2,Parent=_card})Round(_logo,8)New('TextLabel',{BackgroundTransparency=1,Size=UDim2.new(1,0,1,0),Font=Enum.Font.GothamBlack,Text='J',TextColor3=Palette.Text,TextSize=13,Parent=_logo})New('TextLabel',{BackgroundTransparency=1,Position=UDim2.new(0,48,0,12),Size=UDim2.new(1,-140,0,15),Font=Enum.Font.GothamBold,Text='JEYHUB',TextColor3=Palette.Text,TextSize=13,TextXAlignment=Enum.TextXAlignment.Left,Parent=_card})New('TextLabel',{BackgroundTransparency=1,Position=UDim2.new(0,48,0,27),Size=UDim2.new(1,-140,0,11),Font=Enum.Font.Gotham,Text='Whitelist check',TextColor3=
+  local _logo=New('Frame',{Position=UDim2.new(0,14,0,12),Size=UDim2.new(0,26,0,26),BackgroundColor3=_TILE,BackgroundTransparency=0.2,Parent=_card})Round(_logo,8)New('TextLabel',{BackgroundTransparency=1,Size=UDim2.new(1,0,1,0),Font=Enum.Font.GothamBlack,Text='J',TextColor3=Palette.Text,TextSize=13,Parent=_logo})New('TextLabel',{BackgroundTransparency=1,Position=UDim2.new(0,48,0,12),Size=UDim2.new(1,-140,0,15),Font=Enum.Font.GothamBold,Text='HAMA',TextColor3=Palette.Text,TextSize=13,TextXAlignment=Enum.TextXAlignment.Left,Parent=_card})New('TextLabel',{BackgroundTransparency=1,Position=UDim2.new(0,48,0,27),Size=UDim2.new(1,-140,0,11),Font=Enum.Font.Gotham,Text='Whitelist check',TextColor3=
   Palette.TextMuted,TextSize=10,TextXAlignment=Enum.TextXAlignment.Left,Parent=_card})local _lockChip=New('Frame',{AnchorPoint=Vector2.new(1,0),Position=UDim2.new(1,-14,0,16),Size=UDim2.new(0,0,0,18),AutomaticSize=Enum.AutomaticSize.X,BackgroundColor3=Palette.Danger,BackgroundTransparency=0.84,Parent=_card})New('UICorner',{CornerRadius=UDim.new(1,0),Parent=_lockChip})New('UIListLayout',{FillDirection=Enum.FillDirection.Horizontal,VerticalAlignment=Enum.VerticalAlignment.Center,Padding=UDim.new(0,5),SortOrder=Enum.SortOrder.LayoutOrder,Parent=_lockChip})New('UIPadding',{PaddingLeft=UDim.new(0,7),PaddingRight=UDim.new(0,8),Parent=_lockChip})local _lockDot=New('Frame',{BackgroundColor3=Palette.Danger,Size=UDim2.new(0,5,0,5),BorderSizePixel=0,LayoutOrder=1,Parent=_lockChip})New('UICorner',{CornerRadius=UDim.new(1,0),Parent=_lockDot})New('TextLabel',{BackgroundTransparency=1,AutomaticSize=Enum.AutomaticSize.X,Size=UDim2.new(0,0,1,0),Font=Enum.Font.GothamBold,Text='LOCKED',TextColor3=Palette.
-  Danger,TextSize=8,LayoutOrder=2,Parent=_lockChip})_hair(_card,49)New('TextLabel',{BackgroundTransparency=1,Position=UDim2.new(0,16,0,60),Size=UDim2.new(1,-32,0,22),Font=Enum.Font.GothamBlack,Text='Access denied',TextColor3=Palette.Text,TextSize=19,TextXAlignment=Enum.TextXAlignment.Left,Parent=_card})New('TextLabel',{BackgroundTransparency=1,Position=UDim2.new(0,16,0,85),Size=UDim2.new(1,-32,0,26),Font=Enum.Font.Gotham,Text=[[This account isn't on the JEYHUB whitelist. Contact the administrator to request access.]],TextColor3=Palette.TextMuted,TextSize=10,TextWrapped=true,TextXAlignment=Enum.TextXAlignment.Left,TextYAlignment=Enum.TextYAlignment.Top,Parent=_card})local _userCard=New('Frame',{Position=UDim2.new(0,14,0,120),Size=UDim2.new(1,-28,0,46),BackgroundColor3=_TILE,BackgroundTransparency=0.35,Parent=_card})Round(_userCard,10)local _avatar=New('ImageLabel',{Size=UDim2.new(0,30,0,30),Position=UDim2.new(0,10,0.5,-15),BackgroundColor3=Palette.GlassLight,ScaleType=Enum.ScaleType.Crop,
+  Danger,TextSize=8,LayoutOrder=2,Parent=_lockChip})_hair(_card,49)New('TextLabel',{BackgroundTransparency=1,Position=UDim2.new(0,16,0,60),Size=UDim2.new(1,-32,0,22),Font=Enum.Font.GothamBlack,Text='Access denied',TextColor3=Palette.Text,TextSize=19,TextXAlignment=Enum.TextXAlignment.Left,Parent=_card})New('TextLabel',{BackgroundTransparency=1,Position=UDim2.new(0,16,0,85),Size=UDim2.new(1,-32,0,26),Font=Enum.Font.Gotham,Text=[[This account isn't on the HAMA whitelist. Contact the administrator to request access.]],TextColor3=Palette.TextMuted,TextSize=10,TextWrapped=true,TextXAlignment=Enum.TextXAlignment.Left,TextYAlignment=Enum.TextYAlignment.Top,Parent=_card})local _userCard=New('Frame',{Position=UDim2.new(0,14,0,120),Size=UDim2.new(1,-28,0,46),BackgroundColor3=_TILE,BackgroundTransparency=0.35,Parent=_card})Round(_userCard,10)local _avatar=New('ImageLabel',{Size=UDim2.new(0,30,0,30),Position=UDim2.new(0,10,0.5,-15),BackgroundColor3=Palette.GlassLight,ScaleType=Enum.ScaleType.Crop,
   Image='',Parent=_userCard})New('UICorner',{CornerRadius=UDim.new(1,0),Parent=_avatar})Stroke(_avatar,Palette.Danger,1.5,0.35)pcall(function()_avatar.Image='rbxthumb://type=AvatarHeadShot&id='..tostring(LocalPlayer.UserId)..'&w=150&h=150'
   end
   )New('TextLabel',{RichText=false,BackgroundTransparency=1,Position=UDim2.new(0,50,0,8),Size=UDim2.new(1,-60,0,15),Font=Enum.Font.GothamBold,Text=LocalPlayer.DisplayName or LocalPlayer.Name,TextColor3=Palette.Text,TextSize=12,TextTruncate=Enum.TextTruncate.AtEnd,TextXAlignment=Enum.TextXAlignment.Left,Parent=_userCard})New('TextLabel',{RichText=false,BackgroundTransparency=1,Position=UDim2.new(0,50,0,24),Size=UDim2.new(1,-60,0,13),Font=Enum.Font.GothamMedium,Text='@'..LocalPlayer.Name..'  '.."\194\183"..'  not authorized',TextColor3=_MUTE,TextSize=10,TextTruncate=Enum.TextTruncate.AtEnd,TextXAlignment=Enum.TextXAlignment.Left,Parent=_userCard})local _closeBtn=New('TextButton',{Position=UDim2.new(0,14,0,176),Size=UDim2.new(1,-28,0,32),
